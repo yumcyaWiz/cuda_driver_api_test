@@ -5,11 +5,14 @@
 
 void cudaCheckError(const CUresult &result)
 {
-    const char *pStr;
-    if (cuGetErrorName(result, &pStr) != CUDA_ERROR_INVALID_VALUE) {
-        std::string str(pStr);
-        if (str != "CUDA_SUCCESS") { throw std::runtime_error(pStr); }
-    }
+    if (result == CUDA_SUCCESS) return;
+
+    const char *errorName = nullptr;
+    cuGetErrorName(result, &errorName);
+    const char *errorString = nullptr;
+    cuGetErrorString(result, &errorString);
+
+    throw std::runtime_error(std::format("{}: {}\n", errorName, errorString));
 }
 
 template <typename T>

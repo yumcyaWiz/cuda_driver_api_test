@@ -2,8 +2,10 @@
 
 #include <format>
 #include <iostream>
+#include <source_location>
 
-void cudaCheckError(const CUresult &result)
+void cudaCheckError(const CUresult &result, const std::source_location &loc =
+                                                std::source_location::current())
 {
     if (result == CUDA_SUCCESS) return;
 
@@ -12,7 +14,9 @@ void cudaCheckError(const CUresult &result)
     const char *errorString = nullptr;
     cuGetErrorString(result, &errorString);
 
-    throw std::runtime_error(std::format("{}: {}\n", errorName, errorString));
+    throw std::runtime_error(
+        std::format("{}:{}:{}:{}: {}\n", loc.file_name(), loc.line(),
+                    loc.column(), loc.function_name(), errorName, errorString));
 }
 
 template <typename T>

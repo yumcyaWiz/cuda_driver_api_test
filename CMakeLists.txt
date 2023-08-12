@@ -19,13 +19,13 @@ endif()
 # CUDA Toolkit
 find_package(CUDAToolkit REQUIRED)
 
-# kernel
+# compile kernel
 add_library(kernel OBJECT "src/kernel.cu")
 set_target_properties(kernel PROPERTIES
     CUDA_PTX_COMPILATION ON
 )
 
-# main
+# compile main
 add_executable(main "src/main.cpp")
 target_link_libraries(main PRIVATE
     CUDA::cuda_driver

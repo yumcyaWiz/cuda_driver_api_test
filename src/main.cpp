@@ -19,8 +19,8 @@ template <typename T>
 class CUDABuffer
 {
    private:
-    CUdeviceptr dptr;
-    int size;
+    CUdeviceptr dptr = 0;
+    int size = 0;
 
    public:
     CUDABuffer(int size) : size(size)
@@ -39,12 +39,12 @@ class CUDABuffer
 
     const CUdeviceptr &getDevicePtr() const { return dptr; }
 
-    void copyHtoD(const T *hptr)
+    void copyHtoD(const T *hptr) const
     {
         cudaCheckError(cuMemcpyHtoD(dptr, hptr, sizeof(T) * size));
     }
 
-    void copyDtoH(T *hptr)
+    void copyDtoH(T *hptr) const
     {
         cudaCheckError(cuMemcpyDtoH(hptr, dptr, sizeof(T) * size));
     }
@@ -53,8 +53,8 @@ class CUDABuffer
 class CUDADevice
 {
    private:
-    CUdevice device;
-    CUcontext context;
+    CUdevice device = 0;
+    CUcontext context = nullptr;
 
    public:
     CUDADevice(CUdevice device) : device(device)
@@ -86,14 +86,14 @@ class CUDADevice
         cuCtxDestroy(context);
     }
 
-    void synchronize() { cudaCheckError(cuCtxSynchronize()); }
+    void synchronize() const { cudaCheckError(cuCtxSynchronize()); }
 };
 
 class CUDAKernel
 {
    private:
-    CUmodule module;
-    CUfunction function;
+    CUmodule module = nullptr;
+    CUfunction function = nullptr;
 
    public:
     CUDAKernel(const std::string &filename, const std::string &kernelName)

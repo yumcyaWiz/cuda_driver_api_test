@@ -16,9 +16,17 @@ if(NOT DEFINED CMAKE_CUDA_STANDARD)
     set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 endif()
 
+# CUDA Toolkit
+find_package(CUDAToolkit REQUIRED)
+
+# kernel
 add_library(kernel OBJECT "src/kernel.cu")
 set_target_properties(kernel PROPERTIES
     CUDA_PTX_COMPILATION ON
 )
 
+# main
 add_executable(main "src/main.cpp")
+target_link_libraries(main PRIVATE
+    CUDA::cuda_driver
+)

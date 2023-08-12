@@ -25,6 +25,13 @@ class CUDABuffer
         cudaCheckError(cuMemAlloc(&dptr, sizeof(T) * size));
     }
 
+    CUDABuffer(const CUDABuffer &) = delete;
+
+    CUDABuffer(CUDABuffer &&other) : dptr(other.dptr), size(other.size)
+    {
+        other.dptr = 0;
+    }
+
     ~CUDABuffer() { cudaCheckError(cuMemFree(dptr)); }
 
     const CUdeviceptr &getDevicePtr() const { return dptr; }
@@ -61,6 +68,15 @@ class CUDADevice
         cuCtxPushCurrent(context);
     }
 
+    CUDADevice(const CUDADevice &) = delete;
+
+    CUDADevice(CUDADevice &&other)
+        : device(other.device), context(other.context)
+    {
+        other.device = 0;
+        other.context = nullptr;
+    }
+
     ~CUDADevice()
     {
         cuCtxPopCurrent(&context);
@@ -80,6 +96,15 @@ class CUDAKernel
         cudaCheckError(cuModuleLoad(&module, filename.c_str()));
         cudaCheckError(
             cuModuleGetFunction(&function, module, kernelName.c_str()));
+    }
+
+    CUDAKernel(const CUDAKernel &) = delete;
+
+    CUDAKernel(CUDAKernel &&other)
+        : module(other.module), function(other.function)
+    {
+        other.module = nullptr;
+        other.function = nullptr;
     }
 
     ~CUDAKernel() { cudaCheckError(cuModuleUnload(module)); }

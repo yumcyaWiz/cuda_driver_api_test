@@ -82,6 +82,8 @@ class CUDADevice
         cuCtxPopCurrent(&context);
         cuCtxDestroy(context);
     }
+
+    void synchronize() { cudaCheckError(cuCtxSynchronize()); }
 };
 
 class CUDAKernel

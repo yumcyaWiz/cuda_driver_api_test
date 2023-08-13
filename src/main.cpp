@@ -134,7 +134,7 @@ int main()
     cudaCheckError(cuInit(0));
 
     // init CUDA context
-    // CUDADevice device(0);
+    CUDADevice device(0);
 
     constexpr int N = 10;
 

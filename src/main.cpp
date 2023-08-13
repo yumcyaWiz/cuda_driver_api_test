@@ -15,7 +15,7 @@ void cudaCheckError(const CUresult &result, const std::source_location &loc =
     cuGetErrorString(result, &errorString);
 
     throw std::runtime_error(
-        std::format("{}:{}:{}:{}: {}\n", loc.file_name(), loc.line(),
+        std::format("{}({}:{}) {}: {}\n", loc.file_name(), loc.line(),
                     loc.column(), loc.function_name(), errorName, errorString));
 }
 
@@ -134,7 +134,7 @@ int main()
     cudaCheckError(cuInit(0));
 
     // init CUDA context
-    CUDADevice device(0);
+    // CUDADevice device(0);
 
     constexpr int N = 10;
 

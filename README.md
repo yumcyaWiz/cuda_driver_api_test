@@ -1,6 +1,6 @@
 # cuda_driver_api_test
 
-simple example of CUDA Driver API
+minimal example of CUDA Driver API
 
 ## Requirements
 
